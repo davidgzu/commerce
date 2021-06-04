@@ -3,16 +3,16 @@ import type { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { getConfig } from '@framework/api'
-import getAllPages from '@framework/api/operations/get-all-pages'
-import getSiteInfo from '@framework/api/operations/get-site-info'
-import useSearch from '@framework/products/use-search'
+
 import { Layout } from '@components/common'
 import { ProductCard } from '@components/product'
+import type { Product } from '@commerce/types/product'
 import { Container, Grid, Skeleton } from '@components/ui'
 
+import useSearch from '@framework/product/use-search'
+import commerce from '@lib/api/commerce'
 import rangeMap from '@lib/range-map'
-import getSlug from '@lib/get-slug'
+
 import {
   filterQuery,
   getCategoryPath,
@@ -20,18 +20,8 @@ import {
   useSearchMeta,
 } from '@lib/search'
 
-export async function getStaticProps({
-  preview,
-  locale,
-}: GetStaticPropsContext) {
-  const config = getConfig({ locale })
-  const { pages } = await getAllPages({ config, preview })
-  const { categories, brands } = await getSiteInfo({ config, preview })
-
-  return {
-    props: { pages, categories, brands },
-  }
-}
+// TODO(bc) Remove this. This should come from the API
+import getSlug from '@lib/get-slug'
 
 const SORT = Object.entries({
   'latest-desc': 'Latest arrivals',
@@ -39,6 +29,23 @@ const SORT = Object.entries({
   'price-asc': 'Price: Low to high',
   'price-desc': 'Price: High to low',
 })
+
+export async function getStaticProps({
+  preview,
+  locale,
+  locales,
+}: GetStaticPropsContext) {
+  const config = { locale, locales }
+  const { pages } = await commerce.getAllPages({ config, preview })
+  const { categories, brands } = await commerce.getSiteInfo({ config, preview })
+  return {
+    props: {
+      pages,
+      categories,
+      brands,
+    },
+  }
+}
 
 export default function Search({
   categories,
@@ -48,7 +55,7 @@ export default function Search({
   const [toggleFilter, setToggleFilter] = useState(false)
 
   const router = useRouter()
-  const { asPath } = router
+  const { asPath, locale } = router
   const { q, sort } = router.query
   // `q` can be included but because categories and designers can't be searched
   // in the same way of products, it's better to ignore the search input if one
@@ -56,18 +63,17 @@ export default function Search({
   const query = filterQuery({ sort })
 
   const { pathname, category, brand } = useSearchMeta(asPath)
-  const activeCategory = categories.find(
-    (cat) => getSlug(cat.path) === category
-  )
+  const activeCategory = categories.find((cat) => cat.slug === category)
   const activeBrand = brands.find(
     (b) => getSlug(b.node.path) === `brands/${brand}`
   )?.node
 
   const { data } = useSearch({
     search: typeof q === 'string' ? q : '',
-    categoryId: activeCategory?.entityId,
-    brandId: activeBrand?.entityId,
+    categoryId: activeCategory?.id,
+    brandId: (activeBrand as any)?.entityId,
     sort: typeof sort === 'string' ? sort : '',
+    locale,
   })
 
   const handleClick = (event: any, filter: string) => {
@@ -76,7 +82,6 @@ export default function Search({
     } else {
       setToggleFilter(!toggleFilter)
     }
-
     setActiveFilter(filter)
   }
 
@@ -91,7 +96,7 @@ export default function Search({
                 <button
                   type="button"
                   onClick={(e) => handleClick(e, 'categories')}
-                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
+                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
                   id="options-menu"
                   aria-haspopup="true"
                   aria-expanded="true"
@@ -155,8 +160,7 @@ export default function Search({
                         className={cn(
                           'block text-sm leading-5 text-gray-700 hover:bg-gray-100 lg:hover:bg-transparent hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900',
                           {
-                            underline:
-                              activeCategory?.entityId === cat.entityId,
+                            underline: activeCategory?.id === cat.id,
                           }
                         )}
                       >
@@ -190,7 +194,7 @@ export default function Search({
                 <button
                   type="button"
                   onClick={(e) => handleClick(e, 'brands')}
-                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-900 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
+                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-900 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
                   id="options-menu"
                   aria-haspopup="true"
                   aria-expanded="true"
@@ -257,6 +261,7 @@ export default function Search({
                         className={cn(
                           'block text-sm leading-5 text-gray-700 hover:bg-gray-100 lg:hover:bg-transparent hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900',
                           {
+                            // @ts-ignore Shopify - Fix this types
                             underline: activeBrand?.entityId === node.entityId,
                           }
                         )}
@@ -333,14 +338,16 @@ export default function Search({
 
           {data ? (
             <Grid layout="normal">
-              {data.products.map(({ node }) => (
+              {data.products.map((product: Product) => (
                 <ProductCard
                   variant="simple"
-                  key={node.path}
+                  key={product.path}
                   className="animated fadeIn"
-                  product={node}
-                  imgWidth={480}
-                  imgHeight={480}
+                  product={product}
+                  imgProps={{
+                    width: 480,
+                    height: 480,
+                  }}
                 />
               ))}
             </Grid>
@@ -365,7 +372,7 @@ export default function Search({
                 <button
                   type="button"
                   onClick={(e) => handleClick(e, 'sort')}
-                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
+                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
                   id="options-menu"
                   aria-haspopup="true"
                   aria-expanded="true"
