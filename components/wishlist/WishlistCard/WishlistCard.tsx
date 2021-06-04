@@ -11,9 +11,6 @@ import type { Product } from '@commerce/types/product'
 import usePrice from '@framework/product/use-price'
 import useAddItem from '@framework/cart/use-add-item'
 import useRemoveItem from '@framework/wishlist/use-remove-item'
-
-const placeholderImg = '/product-img-placeholder.svg'
-
 interface Props {
   product: Product
 }
