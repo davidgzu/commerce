@@ -11,7 +11,7 @@ import FacebookIcon from '@material-ui/icons/Facebook'
 export const FooterSection = styled.footer`
   background: #000000;
   width: 100%;
-  padding: 40px 0 20px; 0;
+  padding: 40px 0 20px 0;
 `
 
 export const Wrapper = styled.div`
