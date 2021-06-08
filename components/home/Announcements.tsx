@@ -64,7 +64,6 @@ export default function Announcements() {
         </Announcement>
         <ResponsiveLine />
       </AnnouncementsContainer>
-      <HorizontalLine />
     </Container>
   )
 }

@@ -7,6 +7,7 @@ import type { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import HeroHome from '@components/home/HeroHome'
 import Announcements from '@components/home/Announcements'
 import Eligelo from '@components/home/Eligelo/Eligelo'
+import Clientes from '@components/home/Clientes/Clientes'
 
 export async function getStaticProps({
   preview,
@@ -40,6 +41,7 @@ export default function Home({
     <>
       <HeroHome />
       <Announcements />
+      <Clientes />
       <Eligelo />
       <Grid>
         {products.slice(0, 3).map((product, i) => (
