@@ -1,17 +1,17 @@
 :root {
-  --primary: #ffffff;
-  --primary-2: #f1f3f5;
-  --secondary: #000000;
-  --secondary-2: #111;
-  --selection: var(--cyan);
+  --primary: #ffffff !important;
+  --primary-2: #f1f3f5 !important;
+  --secondary: #000000 !important;
+  --secondary-2: #111 !important;
+  --selection: var(--cyan) !important;
 
-  --text-base: #000000;
-  --text-primary: #000000;
-  --text-secondary: white;
+  --text-base: #000000 !important;
+  --text-primary: #000000 !important;
+  --text-secondary: white !important;
 
-  --hover: rgba(0, 0, 0, 0.075);
-  --hover-1: rgba(0, 0, 0, 0.15);
-  --hover-2: rgba(0, 0, 0, 0.25);
+  --hover: rgba(0, 0, 0, 0.075) !important;
+  --hover-1: rgba(0, 0, 0, 0.15) !important;
+  --hover-2: rgba(0, 0, 0, 0.25) !important;
   --cyan: #22b8cf;
   --green: #37b679;
   --red: #da3c3c;
@@ -35,18 +35,18 @@
 }
 
 [data-theme='dark'] {
-  --primary: #000000;
-  --primary-2: #111;
-  --secondary: #ffffff;
-  --secondary-2: #f1f3f5;
-  --hover: rgba(255, 255, 255, 0.075);
-  --hover-1: rgba(255, 255, 255, 0.15);
-  --hover-2: rgba(255, 255, 255, 0.25);
+  --primary: #000000 !important;
+  --primary-2: #111 !important;
+  --secondary: #ffffff !important;
+  --secondary-2: #f1f3f5 !important;
+  --hover: rgba(255, 255, 255, 0.075) !important;
+  --hover-1: rgba(255, 255, 255, 0.15) !important;
+  --hover-2: rgba(255, 255, 255, 0.25) !important;
   --selection: var(--purple);
 
-  --text-base: white;
-  --text-primary: white;
-  --text-secondary: black;
+  --text-base: white !important;
+  --text-primary: white !important;
+  --text-secondary: black !important;
 
   --accents-0: #212529;
   --accents-1: #343a40;
@@ -66,6 +66,21 @@
   box-sizing: inherit;
 }
 
+@font-face {
+  font-family: 'Montserrat-Light';
+  src: url('/public/fonts/Montserrat-Light.ttf');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/public/fonts/Montserrat-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Montserrat-Bold';
+  src: url('/public/fonts/Montserrat-SemiBold.ttf');
+}
+
 html {
   height: 100%;
   box-sizing: border-box;
@@ -78,7 +93,7 @@ html {
 
 html,
 body {
-  font-family: var(--font-sans);
+  font-family: 'Montserrat', sans-serif !important;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -127,4 +142,3 @@ a {
     opacity: 1;
   }
 }
-
