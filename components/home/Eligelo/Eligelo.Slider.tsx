@@ -21,8 +21,9 @@ const EligeloSlider: FC = () => {
           height={40}
         ></Image>
       }
+      indicators={false}
     >
-      <Carousel.Item interval={1000}>
+      <Carousel.Item>
         <Card>
           <Image
             src="/assets/home/eligelo/elige.png"
