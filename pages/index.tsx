@@ -44,7 +44,7 @@ export default function Home({
       <Clientes />
       <Eligelo />
       <Grid>
-        {products.slice(0, 3).map((product, i) => (
+        {products.slice(0, 6).map((product, i) => (
           <ProductCard
             key={product.id}
             product={product}
@@ -56,7 +56,7 @@ export default function Home({
         ))}
       </Grid>
       <Marquee variant="secondary">
-        {products.slice(0, 3).map((product, i) => (
+        {products.slice(0, 6).map((product, i) => (
           <ProductCard key={product.id} product={product} variant="slim" />
         ))}
       </Marquee>
