@@ -8,6 +8,7 @@ import HeroHome from '@components/home/HeroHome'
 import Announcements from '@components/home/Announcements'
 import Eligelo from '@components/home/Eligelo/Eligelo'
 import Clientes from '@components/home/Clientes/Clientes'
+import ProductosDestacados from '@components/home/ProductosDestacados/ProductosDestacados'
 
 export async function getStaticProps({
   preview,
@@ -42,24 +43,9 @@ export default function Home({
       <HeroHome />
       <Announcements />
       <Clientes />
+      <ProductosDestacados products={products} />
       <Eligelo />
-      <Grid>
-        {products.slice(0, 6).map((product, i) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            imgProps={{
-              width: i === 0 ? 1080 : 540,
-              height: i === 0 ? 1080 : 540,
-            }}
-          />
-        ))}
-      </Grid>
-      <Marquee variant="secondary">
-        {products.slice(0, 6).map((product, i) => (
-          <ProductCard key={product.id} product={product} variant="slim" />
-        ))}
-      </Marquee>
+
       <Hero
         headline="Release Details: The Yeezy BOOST 350 V2 ‘Natural'"
         description="
