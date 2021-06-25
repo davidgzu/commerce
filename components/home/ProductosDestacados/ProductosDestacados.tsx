@@ -3,6 +3,7 @@ import { Grid } from '@components/ui'
 import {
   ProductSection,
   ProductsTitle,
+  GridContainer,
   TextContainer,
   ProductsSubtitle,
 } from './ProductosDestacados.style'
@@ -24,19 +25,20 @@ export default function ProductosDestacados(props: {
           última generación.
         </ProductsSubtitle>
       </TextContainer>
-
-      <Grid>
-        {props.products.slice(0, 6).map((product: any, i: number) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            imgProps={{
-              width: i === 0 ? 1080 : 540,
-              height: i === 0 ? 1080 : 540,
-            }}
-          />
-        ))}
-      </Grid>
+      <GridContainer>
+        <Grid>
+          {props.products.slice(0, 6).map((product: any, i: number) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              imgProps={{
+                width: i === 0 ? 1080 : 540,
+                height: i === 0 ? 1080 : 540,
+              }}
+            />
+          ))}
+        </Grid>
+      </GridContainer>
     </ProductSection>
   )
 }

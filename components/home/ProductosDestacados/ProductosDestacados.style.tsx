@@ -11,6 +11,13 @@ export const TextContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   margin: 4rem auto;
+
+  @media (max-width: 800px) {
+    margin: 1.5rem auto;
+  }
+`
+export const GridContainer = styled.div`
+  padding: 0 10%;
 `
 
 export const ProductsTitle = styled.h3`
@@ -19,6 +26,10 @@ export const ProductsTitle = styled.h3`
   line-height: 37px;
   text-align: center;
   color: #000000;
+  @media (max-width: 800px) {
+    font-size: 16px;
+    line-height: 20px;
+  }
 `
 
 export const ProductsSubtitle = styled.h4`
@@ -30,4 +41,10 @@ export const ProductsSubtitle = styled.h4`
   color: #65636a;
   max-width: 60%;
   margin-top: 1rem;
+
+  @media (max-width: 800px) {
+    font-size: 12px;
+    line-height: 18px;
+    max-width: 90%;
+  }
 `
