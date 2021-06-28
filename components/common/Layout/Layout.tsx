@@ -49,13 +49,8 @@ const Layout: FC<Props> = ({
   children,
   pageProps: { categories = [], ...pageProps },
 }) => {
-  const {
-    displaySidebar,
-    displayModal,
-    closeSidebar,
-    closeModal,
-    modalView,
-  } = useUI()
+  const { displaySidebar, displayModal, closeSidebar, closeModal, modalView } =
+    useUI()
   const { acceptedCookies, onAcceptCookies } = useAcceptCookies()
   const { locale = 'en-US' } = useRouter()
 
@@ -67,9 +62,9 @@ const Layout: FC<Props> = ({
   return (
     <CommerceProvider locale={locale}>
       <div className={cn(s.root)}>
-        <Navbar links={navBarlinks} />
+        <Navbar />
         <main className="fit">{children}</main>
-        <Footer pages={pageProps.pages} />
+        <Footer />
 
         <Modal open={displayModal} onClose={closeModal}>
           {modalView === 'LOGIN_VIEW' && <LoginView />}
