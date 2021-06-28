@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const ProductSection = styled.section`
   max-width: 1440px;
-  margin: auto;
+  margin: auto auto 5vh;
 `
 
 export const TextContainer = styled.div`
